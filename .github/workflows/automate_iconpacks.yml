@@ -20,8 +20,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
+      - name: Ensure required directories exist
+        run: |
+          echo "Checking directories..."
+          ls -l ${{ github.workspace }}/.github/scripts
+          ls -l ${{ github.workspace }}/iconpacks
+
       - name: Run automation script
-        run: python .github/scripts/automate_iconpacks.py
+        run: |
+          python .github/scripts/automate_iconpacks.py
+        continue-on-error: false
 
   build:
     name: Build APK
