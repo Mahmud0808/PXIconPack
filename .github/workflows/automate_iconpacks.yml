@@ -37,7 +37,7 @@ jobs:
           git checkout -b ci-build
           git add .
           git commit -m "Automated icon pack updates (#${{github.run_number}})"
-          git push origin ci-build
+          git push --force origin ci-build
 
   build:
     runs-on: ubuntu-latest
