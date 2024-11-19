@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "sh.siava.iconpacktemplate"
+    namespace = "com.drdisagree.pixelxpert.iconpack"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "sh.siava.iconpacktemplate"
+        applicationId = "com.drdisagree.pixelxpert.iconpack"
         minSdk = 33
         targetSdk = 34
         versionCode = 1
@@ -23,16 +23,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            }
+        }
         debug {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            }
-
         }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

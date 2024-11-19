@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Package data block -->
-    <string-array name="iconpack1"> <!-- iconpack name, matching the activity name mentioned in manifest -->
-        <item>mapping_source</item> <!-- first item must be the name of original resource names array -->
-        <item>replacement</item> <!-- second item must be the name of replacement resource names array -->
-    </string-array>
-
-    <!-- original resource names -->
-    <string-array name="mapping_source"> <!-- This is where we list the icons we target for change -->
-        <item>android:ic_wifi_signal_0</item> <!-- framekwork icons MUST start with 'android:' -->
-        <item>ic_calls_sms</item> <!-- other icons can optionally start with package name -->
-        <item>com.android.settings:ic_calls_mms</item> <!-- other icons can optionally start with package name -->
-    </string-array>
-
-    <!-- replacement resource names. Count and order of items must match the original resource names -->
-    <string-array name="replacement"> <!-- This is the list of icons available in our icon-pack -->
-        <item>new_wifi_signal_level_0</item> <!-- drawable with this name must be present in icon pack, in drawable directory -->
-        <item>call_sms_new_icon</item> <!-- drawable with this name must be present in icon pack, in drawable directory -->
-        <item>call_mms_new_icon</item> <!-- drawable with this name must be present in icon pack, in drawable directory -->
-    </string-array>
+    <!-- Everything will be added here -->
 </resources>

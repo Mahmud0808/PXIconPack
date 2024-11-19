@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <application
-        android:label="Icon Pack Collection"
-        android:supportsRtl="true">
+        android:label="PXIconPack by DrDisagree"
+        android:supportsRtl="true"
+        tools:ignore="MissingApplicationIcon">
 
-        <meta-data android:name="packauthor" android:value="John Doe" /> <!-- This is where you add your name -->
+        <meta-data
+            android:name="packauthor"
+            android:value="DrDisagree" /> <!-- Author of the icon pack -->
 
-        <activity android:name="iconpack1"
-            android:label="A Good Icon Pack"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="sh.siava.pixelxpert.iconpack" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <!-- START OF ICON PACKS -->
 
-        <!-- Optionally, you can have multiple icon packs. If not, remove this block -->
-        <activity android:name="iconpack2"
-            android:label="Another Good Icon Pack"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="sh.siava.pixelxpert.iconpack" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <!-- END OF ICON PACKS -->
     </application>
 </manifest>
