@@ -8,6 +8,8 @@ drawable_dir = './app/src/main/res/drawable'
 arrays_file = './app/src/main/res/values/arrays.xml'
 manifest_file = './app/src/main/AndroidManifest.xml'
 
+VALID_DRAWABLE_EXTENSIONS = ['.xml', '.png', '.jpg', '.jpeg', '.webp']
+
 def get_icon_packs():
     try:
         print("Fetching icon packs from:", iconpacks_dir)
@@ -16,6 +18,49 @@ def get_icon_packs():
         return packs
     except Exception as e:
         print(f"Error fetching icon packs: {e}")
+        sys.exit(1)
+
+def update_drawable_references():
+    try:
+        print("Updating drawable references...")
+
+        for pack_name in get_icon_packs():
+            pack_name_lower = re.sub(r'[^a-zA-Z0-9]', '_', pack_name.lower())
+            pack_path = os.path.join(iconpacks_dir, pack_name)
+
+            for package_name in os.listdir(pack_path):
+                package_path = os.path.join(pack_path, package_name)
+
+                if os.path.isdir(package_path):
+                    if package_name == 'com.android.systemui':
+                        package_name = 'systemui'
+                    elif package_name == 'com.android.settings':
+                        package_name = 'settings'
+
+                    for file in os.listdir(package_path):
+                        file_extension = os.path.splitext(file)[1].lower()
+
+                        if file_extension in VALID_DRAWABLE_EXTENSIONS:
+                            file_path = os.path.join(package_path, file)
+
+                            if file_extension == '.xml':
+                                with open(file_path, 'r') as f:
+                                    file_content = f.read()
+
+                                updated_content = re.sub(
+                                    r'@drawable\/[a-zA-Z0-9_]+',
+                                    lambda m: f"@drawable/{m.group(1)}_{package_name}_{pack_name_lower}",
+                                    file_content
+                                )
+
+                                if updated_content != file_content:
+                                    with open(file_path, 'w') as f:
+                                        f.write(updated_content)
+                                    print(f"Updated drawable references in: {file_path}")
+
+        print("Drawable references updated successfully.")
+    except Exception as e:
+        print(f"Error updating drawable references: {e}")
         sys.exit(1)
 
 def copy_and_rename_files():
@@ -37,14 +82,16 @@ def copy_and_rename_files():
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
 
-                        if file_extension in ['.xml', '.png', '.jpg', '.jpeg']:
+                        if file_extension in VALID_DRAWABLE_EXTENSIONS:
                             original_file_path = os.path.join(package_path, file)
                             new_file_name = f"{os.path.splitext(file)[0]}_{package_name.lower()}_{pack_name_lower}{file_extension}"
                             new_file_path = os.path.join(drawable_dir, new_file_name)
 
                             print(f"Copying {original_file_path} to {new_file_path}")
                             shutil.copy(original_file_path, new_file_path)
+
         print("File copy and rename process completed.")
+        update_drawable_references()
     except Exception as e:
         print(f"Error in file copy and rename process: {e}")
         sys.exit(1)
@@ -127,7 +174,7 @@ def update_arrays():
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
 
-                        if file_extension in ['.xml', '.png', '.jpg', '.jpeg']:
+                        if file_extension in VALID_DRAWABLE_EXTENSIONS:
                             array_updates += f"    <item>{package_name}:{os.path.splitext(file)[0]}</item>\n"
             array_updates += f"</string-array>\n"
 
@@ -146,7 +193,7 @@ def update_arrays():
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
 
-                        if file_extension in ['.xml', '.png', '.jpg', '.jpeg']:
+                        if file_extension in VALID_DRAWABLE_EXTENSIONS:
                             new_name = f"{os.path.splitext(file)[0]}_{package_name.lower()}_{pack_name_lower}"
                             array_updates += f"    <item>{new_name}</item>\n"
             array_updates += f"</string-array>\n"

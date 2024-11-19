@@ -16,6 +16,6 @@
 */
 -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_no_disturb_systemui_oos"
+    android:drawable="@drawable/ic_no_disturb"
     android:insetLeft="2.5dp"
     android:insetRight="2.5dp" />
