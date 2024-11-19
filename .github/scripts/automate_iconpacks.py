@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import shutil
 
 iconpacks_dir = './iconpacks'
@@ -131,4 +132,6 @@ def main():
     update_arrays()
 
 if __name__ == '__main__':
+    print(f"Python version: {sys.version}")
+    print("Running main logic...")
     main()
