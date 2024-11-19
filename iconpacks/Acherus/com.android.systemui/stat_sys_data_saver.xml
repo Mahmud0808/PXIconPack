@@ -16,4 +16,4 @@
 */
 -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/stat_sys_data_saver_vec" />
+    android:drawable="@drawable/stat_sys_data_saver_vec_systemui_acherus" />
