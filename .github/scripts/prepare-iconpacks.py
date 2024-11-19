@@ -20,6 +20,31 @@ def get_icon_packs():
         print(f"Error fetching icon packs: {e}")
         sys.exit(1)
 
+def replace_drawable_references(content, package_name, pack_name_lower):
+    search_pattern = '@drawable/'
+    index = 0
+
+    while index < len(content):
+        index = content.find(search_pattern, index)
+        if index == -1:
+            break
+
+        start = index + len(search_pattern)
+        end = start
+
+        while end < len(content) and (content[end].isalnum() or content[end] == '_'):
+            end += 1
+
+        drawable_name = content[start:end]
+        new_drawable_name = f"{drawable_name}_{package_name}_{pack_name_lower}"
+
+        print(f"Replacing {drawable_name} with {new_drawable_name}")
+
+        content = content[:start] + new_drawable_name + content[end:]
+        index = start + len(new_drawable_name)
+
+    return content
+
 def update_drawable_references():
     try:
         print("Updating drawable references...")
@@ -47,11 +72,7 @@ def update_drawable_references():
                                 with open(file_path, 'r') as f:
                                     file_content = f.read()
 
-                                updated_content = re.sub(
-                                    r'@drawable\/[a-zA-Z0-9_]+',
-                                    lambda m: f"@drawable/{m.group(1)}_{package_name}_{pack_name_lower}",
-                                    file_content
-                                )
+                                updated_content = replace_drawable_references(file_content, package_name, pack_name_lower)
 
                                 if updated_content != file_content:
                                     with open(file_path, 'w') as f:
@@ -64,6 +85,8 @@ def update_drawable_references():
         sys.exit(1)
 
 def copy_and_rename_files():
+    update_drawable_references()
+
     try:
         print("Starting file copy and rename process...")
         for pack_name in get_icon_packs():
@@ -91,7 +114,6 @@ def copy_and_rename_files():
                             shutil.copy(original_file_path, new_file_path)
 
         print("File copy and rename process completed.")
-        update_drawable_references()
     except Exception as e:
         print(f"Error in file copy and rename process: {e}")
         sys.exit(1)
