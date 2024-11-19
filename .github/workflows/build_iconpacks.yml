@@ -68,7 +68,7 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{github.run_number}}
-          versionName: "${{ env.VERSION_NAME }} Dev (#${{github.run_number}})"
+          versionName: "${{ env.VERSION_NAME }} (#${{github.run_number}})"
 
       - name: Write sign info
         if: github.repository == 'Mahmud0808/PXIconPack'
