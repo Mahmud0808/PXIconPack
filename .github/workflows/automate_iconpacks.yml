@@ -27,6 +27,11 @@ jobs:
           python .github/scripts/automate_iconpacks.py
         continue-on-error: false
 
+      - name: Set Git author identity
+        run: |
+          git config user.email "crazymahmud08@gmail.com"
+          git config user.name "DrDisagree"
+
       - name: Commit changes to a new branch
         run: |
           git checkout -b ci-build
