@@ -1,4 +1,4 @@
-name: Automate Icon Packs and Build APK
+name: Prepare icon packs and build APK
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Run automation script
         run: |
-          python .github/scripts/automate_iconpacks.py
+          python .github/scripts/prepare-iconpacks.py
         continue-on-error: false
 
       - name: Set Git author identity
@@ -70,7 +70,7 @@ jobs:
           versionName: "${{ env.VERSION_NAME }} Dev (#${{github.run_number}})"
 
       - name: Write sign info
-        if: github.repository == 'Mahmud0808/PXIconPackTemplate'
+        if: github.repository == 'Mahmud0808/PXIconPack'
         run: |
           if [ ! -z "${{ secrets.KEYSTORE }}" ]; then
             echo storePassword='${{ secrets.KEYSTORE_PASSWORD }}' >> keystore.properties
