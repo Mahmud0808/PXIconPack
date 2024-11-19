@@ -40,3 +40,7 @@ android {
         compose = false
     }
 }
+
+tasks.register("printVersionName") {
+    println(android.defaultConfig.versionName ?: "1.0")
+}
