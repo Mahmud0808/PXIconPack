@@ -12,7 +12,131 @@
             android:value="DrDisagree" /> <!-- Author of the icon pack -->
 
         <!-- START OF ICON PACKS -->
+    <activity android:name="pui"
+        android:label="PUI"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
 
-        <!-- END OF ICON PACKS -->
+    <activity android:name="sam"
+        android:label="Sam"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="outline"
+        android:label="Outline"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="victor"
+        android:label="Victor"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="rounded"
+        android:label="Rounded"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="oos"
+        android:label="OOS"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="plumpy"
+        android:label="Plumpy"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="circular"
+        android:label="Circular"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="acherus"
+        android:label="Acherus"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="filled"
+        android:label="Filled"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="gradicon"
+        android:label="Gradicon"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="aurora"
+        android:label="Aurora"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="lorn"
+        android:label="Lorn"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+
+    <activity android:name="kai"
+        android:label="Kai"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="sh.siava.pixelxpert.iconpack" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+<!-- END OF ICON PACKS -->
     </application>
 </manifest>
