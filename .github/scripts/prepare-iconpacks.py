@@ -2,6 +2,11 @@ import os
 import re
 import sys
 import shutil
+import logging
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+LOGGER = logging.getLogger(__name__)
 
 iconpacks_dir = './iconpacks'
 drawable_dir = './app/src/main/res/drawable'
@@ -10,44 +15,42 @@ manifest_file = './app/src/main/AndroidManifest.xml'
 
 VALID_DRAWABLE_EXTENSIONS = ['.xml', '.png', '.jpg', '.jpeg', '.webp']
 
+
+def normalize_package_name(package_name):
+    """Normalize specific package names."""
+    special_cases = {
+        'com.android.systemui': 'systemui',
+        'com.android.settings': 'settings'
+    }
+    return special_cases.get(package_name, package_name)
+
+
 def get_icon_packs():
     try:
-        print("Fetching icon packs from:", iconpacks_dir)
+        LOGGER.info("Fetching icon packs from: %s", iconpacks_dir)
         packs = [folder for folder in os.listdir(iconpacks_dir) if os.path.isdir(os.path.join(iconpacks_dir, folder))]
-        print(f"Found {len(packs)} icon packs.")
+        LOGGER.info("Found %s icon packs.", len(packs))
         return packs
     except Exception as e:
-        print(f"Error fetching icon packs: {e}")
+        LOGGER.error("Error fetching icon packs: %s", str(e))
         sys.exit(1)
 
+
 def replace_drawable_references(content, package_name, pack_name_lower):
-    search_pattern = '@drawable/'
-    index = 0
-
-    while index < len(content):
-        index = content.find(search_pattern, index)
-        if index == -1:
-            break
-
-        start = index + len(search_pattern)
-        end = start
-
-        while end < len(content) and (content[end].isalnum() or content[end] == '_'):
-            end += 1
-
-        drawable_name = content[start:end]
+    search_pattern = r'@drawable/([a-zA-Z0-9_]+)'
+    
+    def replace(match):
+        drawable_name = match.group(1)
         new_drawable_name = f"{drawable_name}_{package_name}_{pack_name_lower}"
+        LOGGER.info("Replacing %s with %s", drawable_name, new_drawable_name)
+        return f"@drawable/{new_drawable_name}"
 
-        print(f"Replacing {drawable_name} with {new_drawable_name}")
+    return re.sub(search_pattern, replace, content)
 
-        content = content[:start] + new_drawable_name + content[end:]
-        index = start + len(new_drawable_name)
-
-    return content
 
 def update_drawable_references():
     try:
-        print("Updating drawable references...")
+        LOGGER.info("Updating drawable references...")
 
         for pack_name in get_icon_packs():
             pack_name_lower = re.sub(r'[^a-zA-Z0-9]', '_', pack_name.lower())
@@ -57,10 +60,7 @@ def update_drawable_references():
                 package_path = os.path.join(pack_path, package_name)
 
                 if os.path.isdir(package_path):
-                    if package_name == 'com.android.systemui':
-                        package_name = 'systemui'
-                    elif package_name == 'com.android.settings':
-                        package_name = 'settings'
+                    package_name = normalize_package_name(package_name)
 
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
@@ -77,30 +77,35 @@ def update_drawable_references():
                                 if updated_content != file_content:
                                     with open(file_path, 'w') as f:
                                         f.write(updated_content)
-                                    print(f"Updated drawable references in: {file_path}")
+                                    
+                                    LOGGER.info("Updated drawable references in: %s", file_path)
 
-        print("Drawable references updated successfully.")
+        LOGGER.info("Drawable references updated successfully.")
     except Exception as e:
-        print(f"Error updating drawable references: {e}")
+        LOGGER.error("Error updating drawable references: %s", str(e))
         sys.exit(1)
+
 
 def copy_and_rename_files():
     update_drawable_references()
 
     try:
-        print("Starting file copy and rename process...")
+        LOGGER.info("Starting file copy and rename process...")
+
+        # Ensure the destination directory exists
+        if not os.path.exists(drawable_dir):
+            os.makedirs(drawable_dir)
+            LOGGER.info("Created drawable directory: %s", drawable_dir)
+
         for pack_name in get_icon_packs():
             pack_name_lower = re.sub(r'[^a-zA-Z0-9]', '_', pack_name.lower())
             pack_path = os.path.join(iconpacks_dir, pack_name)
-            print(f"Processing pack: {pack_name} ({pack_name_lower})")
+            LOGGER.info("Processing pack: %s (%s)", pack_name, pack_name_lower)
 
             for package_name in os.listdir(pack_path):
                 package_path = os.path.join(pack_path, package_name)
                 if os.path.isdir(package_path):
-                    if package_name == 'com.android.systemui':
-                        package_name = 'systemui'
-                    elif package_name == 'com.android.settings':
-                        package_name = 'settings'
+                    package_name = normalize_package_name(package_name)
 
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
@@ -110,17 +115,18 @@ def copy_and_rename_files():
                             new_file_name = f"{os.path.splitext(file)[0]}_{package_name.lower()}_{pack_name_lower}{file_extension}"
                             new_file_path = os.path.join(drawable_dir, new_file_name)
 
-                            print(f"Copying {original_file_path} to {new_file_path}")
+                            LOGGER.info("Copying %s to %s", original_file_path, new_file_path)
                             shutil.copy(original_file_path, new_file_path)
 
-        print("File copy and rename process completed.")
+        LOGGER.info("File copy and rename process completed.")
     except Exception as e:
-        print(f"Error in file copy and rename process: {e}")
+        LOGGER.error("Error in file copy and rename process: %s", str(e))
         sys.exit(1)
+
 
 def update_manifest():
     try:
-        print("Updating manifest file:", manifest_file)
+        LOGGER.info("Updating manifest file: %s", manifest_file)
         with open(manifest_file, 'r') as f:
             manifest_content = f.read()
 
@@ -130,7 +136,7 @@ def update_manifest():
         end_idx = manifest_content.find(end_comment)
 
         if start_idx == -1 or end_idx == -1:
-            print("Error: Comment markers not found in manifest file.")
+            LOGGER.error("Error: Comment markers not found in manifest file.")
             sys.exit(1)
 
         activities = ""
@@ -155,14 +161,16 @@ def update_manifest():
 
         with open(manifest_file, 'w') as f:
             f.write(new_manifest_content)
-        print("Manifest file updated successfully.")
+        
+        LOGGER.info("Manifest file updated successfully.")
     except Exception as e:
-        print(f"Error updating manifest: {e}")
+        LOGGER.error("Error updating manifest: %s", str(e))
         sys.exit(1)
+
 
 def update_arrays():
     try:
-        print("Updating arrays file:", arrays_file)
+        LOGGER.info("Updating arrays file: %s", arrays_file)
         with open(arrays_file, 'r') as f:
             arrays_content = f.read()
 
@@ -170,7 +178,7 @@ def update_arrays():
         end_resources = arrays_content.find('</resources>')
 
         if start_resources == -1 or end_resources == -1:
-            print("Error: <resources> tags not found in arrays file.")
+            LOGGER.error("Error: <resources> tags not found in arrays file.")
             sys.exit(1)
 
         array_updates = ""
@@ -207,10 +215,7 @@ def update_arrays():
                 package_path = os.path.join(pack_path, package_name)
 
                 if os.path.isdir(package_path):
-                    if package_name == 'com.android.systemui':
-                        package_name = 'systemui'
-                    elif package_name == 'com.android.settings':
-                        package_name = 'settings'
+                    package_name = normalize_package_name(package_name)
 
                     for file in os.listdir(package_path):
                         file_extension = os.path.splitext(file)[1].lower()
@@ -224,19 +229,22 @@ def update_arrays():
 
         with open(arrays_file, 'w') as f:
             f.write(new_arrays_content)
-        print("Arrays file updated successfully.")
+        
+        LOGGER.info("Arrays file updated successfully.")
     except Exception as e:
-        print(f"Error updating arrays file: {e}")
+        LOGGER.error("Error updating arrays file: %s", str(e))
         sys.exit(1)
 
+
 def main():
-    print("Starting automation script...")
+    LOGGER.info("Starting the automation process...")
     copy_and_rename_files()
     update_manifest()
     update_arrays()
-    print("Automation script completed successfully.")
+    LOGGER.info("Automation process completed successfully.")
+
 
 if __name__ == '__main__':
-    print(f"Python version: {sys.version}")
-    print("Running main logic...")
+    LOGGER.info("Python version: %s", sys.version)
+    LOGGER.info("Running main logic...")
     main()
